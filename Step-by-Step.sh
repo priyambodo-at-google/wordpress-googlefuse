@@ -6,11 +6,20 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install gcsfuse
 
-gsutil mb gs://bicaraitcom-wwwhtml-wordpress
-sudo mkdir /var/www/html-fuse
-sudo gcsfuse --implicit-dirs bicaraitcom-wwwhtml-wordpress /var/www/html-fuse/
-sudo cp -rf /var/www/html/* /var/www/html-fuse/
+gsutil mb gs:// bicaraitcom-fuse-wordpress-storage 
+sudo mkdir /var/www/gcs-fuse
+sudo gcsfuse --implicit-dirs bicaraitcom-fuse-wordpress-storage /var/www/gcs-fuse
+sudo mkdir /var/www/gcs-fuse/wordpress
+sudo cp -rf /var/www/html/* /var/www/gcs-fuse/wordpress/
+
+#change your apache config to new destination above
 
 sudo systemctl restart apache2
 sudo systemctl enable apache2
 
+sudo nano /etc/rc.local
+sudo chmod a+x /etc/rc.local 
+
+#Content of the /etc/rc.local :
+#/bin/bash
+gcsfuse --implicit-dirs bicaraitcom-wwwhtml-wordpress /var/www/html-fuse/
